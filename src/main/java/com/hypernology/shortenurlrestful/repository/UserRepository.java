@@ -12,5 +12,4 @@ public interface UserRepository {
 
     User save(User user);
     <T, V, R> String update(T field, V value, R key);
-    <T> String delete(T key);
 }

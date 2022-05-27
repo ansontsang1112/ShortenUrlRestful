@@ -78,7 +78,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         String statement = "INSERT INTO " + TABLE + " VALUES (?, ?, ?, ?, ?, ?, ?)";
-        jdbcOperations.update(statement, new PreparedStatementCreator() {
+        jdbcOperations.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement preparedStatement = con.prepareStatement(statement);
@@ -92,6 +92,7 @@ public class UserRepositoryImpl implements UserRepository {
                 return preparedStatement;
             }
         });
+
         return user;
     }
 
@@ -100,8 +101,4 @@ public class UserRepositoryImpl implements UserRepository {
         return null;
     }
 
-    @Override
-    public <T> String delete(T key) {
-        return null;
-    }
 }

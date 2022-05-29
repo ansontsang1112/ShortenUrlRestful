@@ -9,6 +9,7 @@ public interface UserRepository {
     <T> List<User> queryUserByID(T id);
     <T> List<User> queryUserByDiscordId(T discordId);
     <T> List<User> queryUserByMemberId(T memberId);
+    <F, K> List<User> queryUserByGeneralQuery(F field, K key);
 
     User save(User user);
     <T, V, R> String update(T field, V value, R key);

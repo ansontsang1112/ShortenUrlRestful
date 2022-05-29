@@ -61,7 +61,7 @@ public class UserController {
         }
 
         // Check if user exist
-        if(!postValidationServices.duplicatedUser(requestBody)) {
+        if(!postValidationServices.duplicatedUser(serializedUser)) {
             User persistedUser = userRepository.save(serializedUser);
             return ResponseEntity.created(URI.create(String.format("/user/add/%s", persistedUser.getUid()))).body(persistedUser);
         } else {

@@ -76,6 +76,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public <F, K> List<User> queryUserByGeneralQuery(F field, K key) {
+        String statement = "SELECT * FROM " + TABLE + " WHERE " + field.toString() + " = ?";
+        return jdbcOperations.query(statement, new UserExtractor(), key.toString());
+    }
+
+    @Override
     public User save(User user) {
         String statement = "INSERT INTO " + TABLE + " VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcOperations.update(new PreparedStatementCreator() {

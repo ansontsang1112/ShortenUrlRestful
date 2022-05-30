@@ -52,8 +52,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> queryAllUser() {
-        String statement = "SELECT * FROM " + TABLE;
+    public List<User> queryAllUser(boolean showDisable) {
+        String statement = "SELECT * FROM " + TABLE + " WHERE status = 'Active'";
+        if(showDisable) {
+            statement = "SELECT * FROM " + TABLE;
+        }
+
         return jdbcOperations.query(statement, new UserExtractor());
     }
 
@@ -104,7 +108,67 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public <T, V, R> String update(T field, V value, R key) {
-        return null;
+        String statement = "UPDATE " + TABLE + " SET " + field.toString() + "=? WHERE uid=?";
+        jdbcOperations.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement preparedStatement = con.prepareStatement(statement);
+                preparedStatement.setString(1, value.toString());
+                preparedStatement.setString(2, key.toString());
+                return preparedStatement;
+            }
+        });
+
+        return key.toString();
+    }
+
+    @Override
+    public String disable(String key) {
+        String statement = "UPDATE " + TABLE + " SET status = 'Disable' WHERE uid = ?";
+
+        jdbcOperations.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement preparedStatement = con.prepareStatement(statement);
+                preparedStatement.setString(1, key);
+                return preparedStatement;
+            }
+        });
+
+        return key;
+    }
+
+    @Override
+    public String disable(User user) {
+        String statement = "UPDATE " + TABLE + " SET status = 'Disable' WHERE uid = ?";
+
+        jdbcOperations.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement preparedStatement = con.prepareStatement(statement);
+                preparedStatement.setString(1, user.getUid());
+                return preparedStatement;
+            }
+        });
+
+        return user.getUid();
+    }
+
+    @Override
+    public <T> String delete(T key) {
+        String statement = "DELETE FROM " + TABLE + " WHERE uid = ?";
+
+        jdbcOperations.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement preparedStatement = con.prepareStatement(statement);
+                preparedStatement.setString(1, key.toString());
+                return preparedStatement;
+            }
+        });
+
+        return key.toString();
+
     }
 
 }

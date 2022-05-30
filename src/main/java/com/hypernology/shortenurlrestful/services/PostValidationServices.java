@@ -29,4 +29,9 @@ public class PostValidationServices {
         if(!userRepository.queryUserByDiscordId(user.getDiscordId()).isEmpty()) return true;
         return false;
     }
+
+    public boolean isUserExist(String uid) {
+        if(!userRepository.queryUserByID(uid).isEmpty()) return true;
+        return false;
+    }
 }

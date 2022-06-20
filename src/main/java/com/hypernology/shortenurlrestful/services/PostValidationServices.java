@@ -24,6 +24,15 @@ public class PostValidationServices {
         return true;
     }
 
+    public boolean shortenUrlValidateRequest(Map requestBody) {
+        if(requestBody.isEmpty()) return false;
+        if(!requestBody.containsKey("discordId")) return false;
+        if(!requestBody.containsKey("url")) return false;
+        if(!requestBody.containsKey("timestamp")) return false;
+
+        return true;
+    }
+
     public boolean duplicatedUser(User user) {
         if(!userRepository.queryUserByGeneralQuery("email", user.getEmail()).isEmpty()) return true;
         if(!userRepository.queryUserByDiscordId(user.getDiscordId()).isEmpty()) return true;
@@ -32,6 +41,11 @@ public class PostValidationServices {
 
     public boolean isUserExist(String uid) {
         if(!userRepository.queryUserByID(uid).isEmpty()) return true;
+        return false;
+    }
+
+    public boolean isUserExistByDiscordId(String discordId) {
+        if(!userRepository.queryUserByDiscordId(discordId).isEmpty()) return true;
         return false;
     }
 }

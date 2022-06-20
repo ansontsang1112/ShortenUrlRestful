@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +33,25 @@ public class ShortenUrlRepositoryImpl implements ShortenUrlRepository {
     @Override
     public <T> ShortenUrl findByKey(T key) {
         Map redisMap = redisTemplate.opsForHash().entries(key.toString());
+
+        if(redisMap.isEmpty()) return new ShortenUrl();
+
         return redisServices.objectConverter(redisMap);
     }
 
     @Override
-    public ShortenUrl save(ShortenUrl shortenUrl) {
-        return null;
+    public String save(ShortenUrl shortenUrl) {
+        String redisKey = shortenUrl.getKey();
+
+        redisTemplate.opsForHash().put(redisKey, "click", String.valueOf(shortenUrl.getClicks()));
+        redisTemplate.opsForHash().put(redisKey, "ip", shortenUrl.getIp());
+        redisTemplate.opsForHash().put(redisKey, "status", shortenUrl.getStatus());
+        redisTemplate.opsForHash().put(redisKey, "timestamp", shortenUrl.getTimestamp());
+        redisTemplate.opsForHash().put(redisKey, "title", shortenUrl.getTitle());
+        redisTemplate.opsForHash().put(redisKey, "url", shortenUrl.getUrl());
+        redisTemplate.opsForHash().put(redisKey, "userid", shortenUrl.getUserid());
+
+        return redisKey;
     }
 
     @Override

@@ -9,6 +9,6 @@ public interface ShortenUrlRepository  {
     List<ShortenUrl> findAll();
     <T> ShortenUrl findByKey(T key);
 
-    ShortenUrl save(ShortenUrl shortenUrl);
+    String save(ShortenUrl shortenUrl);
     <K, V> ShortenUrl update(K key, List<V> valueHash);
 }

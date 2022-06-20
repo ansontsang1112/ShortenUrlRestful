@@ -7,4 +7,9 @@ public class StaticUtils {
         if(input != null || input.toString() != "") return true;
         return false;
     }
+
+    public static boolean urlValidation(String url) {
+        if(url.contains("http://") || url.contains("https://")) return true;
+        return false;
+    }
 }
